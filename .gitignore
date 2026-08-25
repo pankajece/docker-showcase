@@ -1,0 +1,31 @@
+# Ignore Python cache (if using Python apps)
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore node modules (if using Node.js apps)
+node_modules/
+
+# Ignore logs
+*.log
+
+# Ignore environment files
+.env
+.env.*
+
+# Ignore Docker build artifacts
+*.tar
+*.img
+*.iso
+
+# Ignore local Docker Compose override files
+docker-compose.override.yml
+
+# Ignore IDE/editor configs
+.vscode/
+.idea/
+*.swp
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
