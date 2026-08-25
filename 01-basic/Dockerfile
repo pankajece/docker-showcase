@@ -1,9 +1,33 @@
-FROM ubuntu:24.04 AS builder
+Stage 1: Build the Java application
 
-RUN printf 'Built in the builder stage\n' > /hello.txt
+# Use an official Maven image with JDK 17build the app to 
+From maven:3.9-eclipse-temurin-17 AS builder
+# Set the working directory inside the container
+WORKDIR /app
 
-FROM ubuntu:24.04
+# Copy the pom.xml file first
+COPY pom.xml .
 
-COPY --from=builder /hello.txt /hello.txt
+# Download dependencies (this caches them in a separate Docker layer, making future builds faster
+RUN mvn dependency:go-offline
 
-CMD ["cat", "/hello.txt"]
+# Copy the source code
+COPY src ./src
+
+# Package the application into a .war file
+RUN mvn clean package -DskipTests
+
+Stage 2: Run the application on Tomcat
+
+# Use an official Tomcat image for the runtime environment
+FROM tomcat:9.0-jdk17
+
+# Remove default Tomcat webapps to keep the container lightweight and secure (optional)
+RUN rm -rf /usr/local/tomcat/webapps/*
+
+# Copy the built WAR file from the builder stage to Tomcat's webapps folder
+# Renaming it to ROOT.war deploys it to the root path (http://localhost:8080/)
+COPY -- from=builder /app/target/ *. war /usr/local/tomcat/webapps/ROOT.war
+
+#Expose Tomcat's default port 
+EXPOSE 8080
