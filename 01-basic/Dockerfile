@@ -1,4 +1,4 @@
-Stage 1: Build the Java application
+#Stage 1: Build the Java application
 
 # Use an official Maven image with JDK 17build the app to 
 From maven:3.9-eclipse-temurin-17 AS builder
@@ -17,7 +17,7 @@ COPY src ./src
 # Package the application into a .war file
 RUN mvn clean package -DskipTests
 
-Stage 2: Run the application on Tomcat
+#Stage 2: Run the application on Tomcat
 
 # Use an official Tomcat image for the runtime environment
 FROM tomcat:9.0-jdk17
