@@ -1,0 +1,2 @@
+FROM nginx:latest 
+COPY StreamFlix /usr/share/nginx/html/
